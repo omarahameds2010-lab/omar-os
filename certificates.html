@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omar Ahmed — Certificates</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07090f;
+  --surface: #0e1117;
+  --surface2: #151b27;
+  --border: #1e2738;
+  --gold: #f5c842;
+  --gold2: #ffd966;
+  --blue: #4f9cf9;
+  --green: #3ecf8e;
+  --purple: #a78bfa;
+  --red: #f87171;
+  --text: #e8edf5;
+  --text-dim: #6b7a99;
+  --font-head: 'Syne', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* BG effects */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(79,156,249,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(167,139,250,0.06) 0%, transparent 50%);
+  pointer-events:none; z-index:0;
+}
+
+/* Grid pattern */
+body::after {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events:none; z-index:0;
+}
+
+/* ═══════ HEADER ═══════ */
+header {
+  position: relative; z-index:10;
+  padding: 60px 60px 0;
+  max-width: 1300px; margin: 0 auto;
+}
+.back-btn {
+  display: inline-flex; align-items:center; gap:8px;
+  padding: 8px 16px; border-radius:6px;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text-dim); font-size:13px; font-weight:600;
+  text-decoration:none; transition:all 0.2s; margin-bottom:40px;
+}
+.back-btn:hover { color:var(--text); border-color:var(--blue); }
+
+.hero-section { text-align:center; margin-bottom:70px; }
+.hero-tag {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 16px; border-radius:20px;
+  background:rgba(79,156,249,0.08); border:1px solid rgba(79,156,249,0.2);
+  font-family:var(--font-mono); font-size:11px; color:var(--blue);
+  letter-spacing:2px; margin-bottom:24px;
+}
+.hero-name {
+  font-family: var(--font-head);
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 800; color: var(--text);
+  line-height: 1; margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+.hero-name span {
+  background: linear-gradient(135deg, var(--gold), var(--blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size:16px; color:var(--text-dim); font-weight:400;
+  max-width:500px; margin:0 auto 40px; line-height:1.8;
+}
+
+/* Stats row */
+.stats-row {
+  display:flex; justify-content:center; gap:48px;
+  margin-bottom:16px; flex-wrap:wrap;
+}
+.stat-item { text-align:center; }
+.stat-num {
+  font-family:var(--font-head); font-size:40px; font-weight:800;
+  background:linear-gradient(135deg, var(--gold), var(--gold2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  line-height:1;
+}
+.stat-lbl { font-size:12px; color:var(--text-dim); margin-top:4px; letter-spacing:1px; font-weight:600; }
+
+/* ═══════ FILTER ═══════ */
+.filter-bar {
+  display:flex; justify-content:center; gap:10px;
+  margin-bottom:50px; flex-wrap:wrap;
+  position:relative; z-index:10;
+}
+.filter-pill {
+  padding:8px 20px; border-radius:30px;
+  background:var(--surface); border:1px solid var(--border);
+  color:var(--text-dim); font-size:12px; font-weight:700;
+  cursor:pointer; transition:all 0.25s; letter-spacing:0.5px;
+}
+.filter-pill.active, .filter-pill:hover {
+  background:rgba(79,156,249,0.1); color:var(--blue);
+  border-color:rgba(79,156,249,0.35);
+  box-shadow:0 0 20px rgba(79,156,249,0.1);
+}
+
+/* ═══════ CERTS GRID ═══════ */
+.certs-section {
+  max-width:1300px; margin:0 auto;
+  padding:0 60px 100px; position:relative; z-index:10;
+}
+.certs-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(360px, 1fr));
+  gap:20px;
+}
+
+/* Certificate Card */
+.cert-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px; overflow:hidden;
+  transition:all 0.4s cubic-bezier(0.23,1,0.32,1);
+  position:relative; cursor:pointer;
+  animation:cardIn 0.5s ease backwards;
+}
+@keyframes cardIn { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
+.cert-card:hover {
+  transform:translateY(-6px);
+  box-shadow:0 24px 60px rgba(0,0,0,0.5);
+}
+
+/* Accent top bar */
+.cert-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  transition:opacity 0.3s;
+}
+.cert-card.gold::before { background:linear-gradient(90deg, var(--gold), var(--gold2)); }
+.cert-card.blue::before { background:linear-gradient(90deg, var(--blue), #7cb9ff); }
+.cert-card.green::before { background:linear-gradient(90deg, var(--green), #6ee7b7); }
+.cert-card.purple::before { background:linear-gradient(90deg, var(--purple), #c4b5fd); }
+.cert-card.red::before { background:linear-gradient(90deg, var(--red), #fca5a5); }
+.cert-card:hover::before { opacity:1; }
+
+/* Card visual banner */
+.cert-banner {
+  height:120px; display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.cert-card.gold .cert-banner { background:linear-gradient(135deg, rgba(245,200,66,0.08), rgba(245,200,66,0.02)); }
+.cert-card.blue .cert-banner { background:linear-gradient(135deg, rgba(79,156,249,0.08), rgba(79,156,249,0.02)); }
+.cert-card.green .cert-banner { background:linear-gradient(135deg, rgba(62,207,142,0.08), rgba(62,207,142,0.02)); }
+.cert-card.purple .cert-banner { background:linear-gradient(135deg, rgba(167,139,250,0.08), rgba(167,139,250,0.02)); }
+.cert-card.red .cert-banner { background:linear-gradient(135deg, rgba(248,113,113,0.08), rgba(248,113,113,0.02)); }
+
+.cert-org-logo {
+  font-size:52px; filter:drop-shadow(0 4px 20px rgba(0,0,0,0.4));
+  animation:logoFloat 4s ease infinite alternate;
+}
+@keyframes logoFloat { from{transform:translateY(0)} to{transform:translateY(-6px)} }
+
+.cert-ribbon {
+  position:absolute; top:14px; right:14px;
+  padding:4px 10px; border-radius:20px;
+  font-family:var(--font-mono); font-size:9px; font-weight:600;
+  letter-spacing:1.5px; text-transform:uppercase;
+}
+.ribbon-verified { background:rgba(62,207,142,0.15); color:var(--green); border:1px solid rgba(62,207,142,0.25); }
+
+/* Card body */
+.cert-body { padding:22px; }
+.cert-org {
+  font-family:var(--font-mono); font-size:10px; font-weight:600;
+  letter-spacing:2px; text-transform:uppercase; margin-bottom:10px;
+}
+.cert-card.gold .cert-org { color:var(--gold); }
+.cert-card.blue .cert-org { color:var(--blue); }
+.cert-card.green .cert-org { color:var(--green); }
+.cert-card.purple .cert-org { color:var(--purple); }
+.cert-card.red .cert-org { color:var(--red); }
+
+.cert-title {
+  font-family:var(--font-head); font-size:18px; font-weight:800;
+  color:var(--text); line-height:1.3; margin-bottom:12px;
+}
+.cert-desc { font-size:13px; color:var(--text-dim); line-height:1.7; margin-bottom:18px; }
+
+.cert-meta { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
+.cert-tag {
+  padding:4px 10px; border-radius:6px;
+  font-size:11px; font-weight:700; letter-spacing:0.5px;
+  background:var(--surface2); border:1px solid var(--border); color:var(--text-dim);
+}
+
+.cert-footer {
+  display:flex; align-items:center; justify-content:space-between;
+  padding-top:16px; border-top:1px solid var(--border);
+}
+.cert-date { font-family:var(--font-mono); font-size:11px; color:var(--text-dim); }
+.verify-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:7px 14px; border-radius:6px;
+  font-size:11px; font-weight:700; letter-spacing:0.5px;
+  text-decoration:none; transition:all 0.2s; border:1px solid;
+}
+.cert-card.gold .verify-btn { color:var(--gold); border-color:rgba(245,200,66,0.25); background:rgba(245,200,66,0.05); }
+.cert-card.gold .verify-btn:hover { background:rgba(245,200,66,0.12); }
+.cert-card.blue .verify-btn { color:var(--blue); border-color:rgba(79,156,249,0.25); background:rgba(79,156,249,0.05); }
+.cert-card.blue .verify-btn:hover { background:rgba(79,156,249,0.12); }
+.cert-card.green .verify-btn { color:var(--green); border-color:rgba(62,207,142,0.25); background:rgba(62,207,142,0.05); }
+.cert-card.green .verify-btn:hover { background:rgba(62,207,142,0.12); }
+.cert-card.purple .verify-btn { color:var(--purple); border-color:rgba(167,139,250,0.25); background:rgba(167,139,250,0.05); }
+.cert-card.purple .verify-btn:hover { background:rgba(167,139,250,0.12); }
+.cert-card.red .verify-btn { color:var(--red); border-color:rgba(248,113,113,0.25); background:rgba(248,113,113,0.05); }
+.cert-card.red .verify-btn:hover { background:rgba(248,113,113,0.12); }
+
+/* ═══════ FEATURED CARD ═══════ */
+.cert-card.featured {
+  grid-column: span 2;
+}
+@media(max-width:800px){ .cert-card.featured { grid-column:span 1; } }
+.cert-card.featured .cert-banner { height:160px; }
+.cert-card.featured .cert-org-logo { font-size:72px; }
+.cert-card.featured .cert-title { font-size:22px; }
+
+/* ═══════ TIMELINE SECTION ═══════ */
+.timeline-section {
+  max-width:800px; margin:0 auto 80px;
+  padding:0 60px; position:relative; z-index:10;
+}
+.timeline-title {
+  font-family:var(--font-head); font-size:28px; font-weight:800;
+  color:var(--text); margin-bottom:40px; text-align:center;
+}
+.timeline { position:relative; }
+.timeline::before {
+  content:''; position:absolute; left:20px; top:0; bottom:0;
+  width:1px; background:linear-gradient(180deg, transparent, var(--border), transparent);
+}
+.timeline-item {
+  display:flex; gap:24px; margin-bottom:32px;
+  animation:cardIn 0.5s ease backwards;
+}
+.timeline-dot {
+  width:40px; height:40px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; border:2px solid var(--border); background:var(--surface);
+  position:relative; z-index:1;
+}
+.timeline-content {
+  flex:1; background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:18px;
+}
+.timeline-date { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:1px; margin-bottom:6px; }
+.timeline-name { font-weight:700; color:var(--text); font-size:15px; margin-bottom:4px; }
+.timeline-org { font-size:12px; color:var(--text-dim); }
+
+/* ═══════ LINKEDIN SECTION ═══════ */
+.linkedin-section {
+  max-width:700px; margin:0 auto 80px;
+  padding:0 60px; position:relative; z-index:10; text-align:center;
+}
+.linkedin-card {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:16px; padding:40px;
+  position:relative; overflow:hidden;
+}
+.linkedin-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg, #0077b5, #00a0dc);
+}
+.linkedin-emoji { font-size:48px; margin-bottom:16px; }
+.linkedin-title { font-family:var(--font-head); font-size:22px; font-weight:800; color:var(--text); margin-bottom:12px; }
+.linkedin-text { font-size:14px; color:var(--text-dim); line-height:1.8; margin-bottom:24px; }
+.copy-btn {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:12px 24px; border-radius:8px;
+  background:linear-gradient(135deg,#0077b5,#00a0dc);
+  border:none; color:#fff;
+  font-family:var(--font-body); font-size:13px; font-weight:700;
+  cursor:pointer; transition:all 0.3s;
+  box-shadow:0 8px 30px rgba(0,119,181,0.3);
+}
+.copy-btn:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(0,119,181,0.5); }
+.post-preview {
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:10px; padding:18px; text-align:left;
+  margin-bottom:20px; font-size:13px; line-height:1.8;
+  color:var(--text); white-space:pre-wrap;
+}
+
+/* Watermark */
+.watermark {
+  position:fixed; right:20px; bottom:80px;
+  font-family:var(--font-mono); font-size:9px;
+  color:rgba(255,255,255,0.06); writing-mode:vertical-rl;
+  letter-spacing:3px; pointer-events:none; z-index:1;
+}
+
+/* Toast */
+.toast {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:var(--green); color:#000;
+  padding:12px 24px; border-radius:30px;
+  font-weight:700; font-size:13px; z-index:9999;
+  transition:transform 0.3s cubic-bezier(0.23,1,0.32,1);
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+@media(max-width:768px) {
+  header, .certs-section, .timeline-section, .linkedin-section { padding-left:20px; padding-right:20px; }
+  header { padding-top:30px; }
+  .certs-grid { grid-template-columns:1fr; }
+  .stats-row { gap:28px; }
+}
+</style>
+</head>
+<body>
+
+<div class="watermark">OMAR AHMED · CERTIFICATES · 2026</div>
+<div class="toast" id="toast">✅ Copied to clipboard!</div>
+
+<!-- ═══════ HEADER ═══════ -->
+<header>
+  <a href="https://omarahameds2010-lab.github.io/omar-os/" class="back-btn">← Back to Portfolio</a>
+  <div class="hero-section">
+    <div class="hero-tag">📜 VERIFIED CREDENTIALS</div>
+    <h1 class="hero-name">Omar Ahmed<br><span>Samir Mohamed</span></h1>
+    <p class="hero-sub">A growing collection of verified certifications in technology, AI, data, and digital skills — earned through dedication and self-driven learning.</p>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num">5</div><div class="stat-lbl">Certificates</div></div>
+      <div class="stat-item"><div class="stat-num">4</div><div class="stat-lbl">Platforms</div></div>
+      <div class="stat-item"><div class="stat-num">2026</div><div class="stat-lbl">Latest Cert</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════ FILTER ═══════ -->
+<div class="filter-bar">
+  <div class="filter-pill active" data-filter="all" onclick="filterCerts('all',this)">All (5)</div>
+  <div class="filter-pill" data-filter="ai" onclick="filterCerts('ai',this)">🤖 AI</div>
+  <div class="filter-pill" data-filter="data" onclick="filterCerts('data',this)">📊 Data</div>
+  <div class="filter-pill" data-filter="web" onclick="filterCerts('web',this)">🌐 Web</div>
+  <div class="filter-pill" data-filter="business" onclick="filterCerts('business',this)">💼 Business</div>
+</div>
+
+<!-- ═══════ CERTS GRID ═══════ -->
+<section class="certs-section">
+  <div class="certs-grid" id="certsGrid">
+
+    <!-- DECI / Udacity — FEATURED -->
+    <div class="cert-card gold featured" data-cat="ai data web" style="animation-delay:0s">
+      <div class="cert-banner">
+        <span class="cert-org-logo">🏛️</span>
+        <span class="cert-ribbon ribbon-verified">✅ Verified</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-org">Udacity · Ministry of ICT Egypt</div>
+        <div class="cert-title">Digital Egypt Cubs Initiative — Level One</div>
+        <div class="cert-desc">Government-sponsored nanodegree program managed by Udacity and backed by Egypt's Ministry of Communications and Information Technology. Covered web design, statistics, and Excel — the complete DECI Level 1 curriculum.</div>
+        <div class="cert-meta">
+          <span class="cert-tag">🏛️ MCIT Egypt</span>
+          <span class="cert-tag">📡 Udacity</span>
+          <span class="cert-tag">🎓 Nanodegree</span>
+          <span class="cert-tag">Summer 2025</span>
+        </div>
+        <div class="cert-footer">
+          <span class="cert-date">📅 November 2025</span>
+          <a href="https://confirm.udacity.com/RP7C69Q5" target="_blank" class="verify-btn">🔗 Verify Certificate</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HP LIFE AI -->
+    <div class="cert-card blue" data-cat="ai business" style="animation-delay:0.1s">
+      <div class="cert-banner">
+        <span class="cert-org-logo">🤖</span>
+        <span class="cert-ribbon ribbon-verified">✅ Verified</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-org">HP LIFE · HP Foundation</div>
+        <div class="cert-title">AI for Business Professionals</div>
+        <div class="cert-desc">Learned AI's role in business, standalone vs integrated AI tools, prompt engineering, ethical AI use, and leveraging AI for professional growth.</div>
+        <div class="cert-meta">
+          <span class="cert-tag">🤖 AI</span>
+          <span class="cert-tag">💼 Business</span>
+          <span class="cert-tag">🔮 Prompt Engineering</span>
+        </div>
+        <div class="cert-footer">
+          <span class="cert-date">📅 February 2026</span>
+          <a href="#" class="verify-btn">🔗 HP LIFE</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coursera Excel -->
+    <div class="cert-card green" data-cat="data" style="animation-delay:0.2s">
+      <div class="cert-banner">
+        <span class="cert-org-logo">📊</span>
+        <span class="cert-ribbon ribbon-verified">✅ Verified</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-org">Coursera · Freedom Learning Group</div>
+        <div class="cert-title">Getting Started with Microsoft Excel</div>
+        <div class="cert-desc">Hands-on project covering Excel fundamentals — formulas, functions, data organization, charts, and spreadsheet design for real-world use.</div>
+        <div class="cert-meta">
+          <span class="cert-tag">📊 Excel</span>
+          <span class="cert-tag">📈 Data</span>
+          <span class="cert-tag">🏆 Project Cert</span>
+        </div>
+        <div class="cert-footer">
+          <span class="cert-date">📅 Feb 16, 2026</span>
+          <a href="https://coursera.org/verify/48ZU8RWGPWJ9" target="_blank" class="verify-btn">🔗 Verify</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coursera Business Analysis -->
+    <div class="cert-card purple" data-cat="business data" style="animation-delay:0.3s">
+      <div class="cert-banner">
+        <span class="cert-org-logo">💼</span>
+        <span class="cert-ribbon ribbon-verified">✅ Verified</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-org">Coursera · Researcher & Lecturer</div>
+        <div class="cert-title">Business Analysis & Process Management</div>
+        <div class="cert-desc">Applied business analysis techniques, process mapping, workflow optimization, and management frameworks for modern organizations.</div>
+        <div class="cert-meta">
+          <span class="cert-tag">📋 Analysis</span>
+          <span class="cert-tag">⚙️ Process Mgmt</span>
+          <span class="cert-tag">🏆 Project Cert</span>
+        </div>
+        <div class="cert-footer">
+          <span class="cert-date">📅 Feb 16, 2026</span>
+          <a href="https://coursera.org/verify/87EMP8I564TY" target="_blank" class="verify-btn">🔗 Verify</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coursera WordPress -->
+    <div class="cert-card red" data-cat="web" style="animation-delay:0.4s">
+      <div class="cert-banner">
+        <span class="cert-org-logo">🌐</span>
+        <span class="cert-ribbon ribbon-verified">✅ Verified</span>
+      </div>
+      <div class="cert-body">
+        <div class="cert-org">Coursera · Public Health Specialist</div>
+        <div class="cert-title">Build a Free Website with WordPress</div>
+        <div class="cert-desc">Practical project covering WordPress setup, theme customization, page building, plugins, and publishing a fully functional website from scratch.</div>
+        <div class="cert-meta">
+          <span class="cert-tag">🌐 WordPress</span>
+          <span class="cert-tag">🎨 Web Design</span>
+          <span class="cert-tag">🏆 Project Cert</span>
+        </div>
+        <div class="cert-footer">
+          <span class="cert-date">📅 Feb 16, 2026</span>
+          <a href="https://coursera.org/verify/9PD129TWX9NH" target="_blank" class="verify-btn">🔗 Verify</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════ TIMELINE ═══════ -->
+<section class="timeline-section">
+  <div class="timeline-title">📅 Learning Journey</div>
+  <div class="timeline">
+    <div class="timeline-item" style="animation-delay:0.1s">
+      <div class="timeline-dot">🏛️</div>
+      <div class="timeline-content">
+        <div class="timeline-date">NOVEMBER 2025</div>
+        <div class="timeline-name">Digital Egypt Cubs Initiative — Level 1</div>
+        <div class="timeline-org">Udacity · Ministry of ICT Egypt · Nanodegree</div>
+      </div>
+    </div>
+    <div class="timeline-item" style="animation-delay:0.2s">
+      <div class="timeline-dot">📊</div>
+      <div class="timeline-content">
+        <div class="timeline-date">FEBRUARY 16, 2026</div>
+        <div class="timeline-name">Getting Started with Microsoft Excel</div>
+        <div class="timeline-org">Coursera · Freedom Learning Group</div>
+      </div>
+    </div>
+    <div class="timeline-item" style="animation-delay:0.25s">
+      <div class="timeline-dot">💼</div>
+      <div class="timeline-content">
+        <div class="timeline-date">FEBRUARY 16, 2026</div>
+        <div class="timeline-name">Business Analysis & Process Management</div>
+        <div class="timeline-org">Coursera</div>
+      </div>
+    </div>
+    <div class="timeline-item" style="animation-delay:0.3s">
+      <div class="timeline-dot">🌐</div>
+      <div class="timeline-content">
+        <div class="timeline-date">FEBRUARY 16, 2026</div>
+        <div class="timeline-name">Build a Free Website with WordPress</div>
+        <div class="timeline-org">Coursera</div>
+      </div>
+    </div>
+    <div class="timeline-item" style="animation-delay:0.35s">
+      <div class="timeline-dot">🤖</div>
+      <div class="timeline-content">
+        <div class="timeline-date">FEBRUARY 24, 2026</div>
+        <div class="timeline-name">AI for Business Professionals</div>
+        <div class="timeline-org">HP LIFE · HP Foundation</div>
+      </div>
+    </div>
+    <div class="timeline-item" style="animation-delay:0.4s;opacity:0.4">
+      <div class="timeline-dot">🎯</div>
+      <div class="timeline-content">
+        <div class="timeline-date">COMING SOON</div>
+        <div class="timeline-name">Next Certification in Progress...</div>
+        <div class="timeline-org">Stay tuned 🚀</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ LINKEDIN POST ═══════ -->
+<section class="linkedin-section">
+  <div class="linkedin-card">
+    <div class="linkedin-emoji">💼</div>
+    <div class="linkedin-title">Share on LinkedIn</div>
+    <div class="linkedin-text">Copy this post and share your achievements with your network!</div>
+    <div class="post-preview" id="postText">🎓 Proud to share my latest certifications!
+
+Over the past few months, I've been building my skills through verified online programs:
+
+✅ Digital Egypt Cubs Initiative — Level 1 (Udacity × MCIT Egypt)
+✅ AI for Business Professionals (HP LIFE Foundation)
+✅ Getting Started with Microsoft Excel (Coursera)
+✅ Business Analysis & Process Management (Coursera)
+✅ Build a Free Website with WordPress (Coursera)
+
+5 certifications. 4 platforms. All verified. 🔥
+
+And I'm just getting started — currently building real projects in HTML, CSS, JavaScript & Python.
+
+Check out my portfolio 👇
+🌐 https://omarahameds2010-lab.github.io/omar-os/
+
+#OpenToWork #WebDevelopment #AI #Egypt #Learning #Certificates</div>
+    <button class="copy-btn" onclick="copyPost()">📋 Copy LinkedIn Post</button>
+  </div>
+</section>
+
+<script>
+// Filter
+function filterCerts(cat, btn) {
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.cert-card').forEach(card=>{
+    if(cat==='all' || card.dataset.cat.includes(cat)){
+      card.style.display=''; card.style.animation='cardIn 0.4s ease';
+    } else {
+      card.style.display='none';
+    }
+  });
+}
+
+// Copy post
+function copyPost() {
+  const text = document.getElementById('postText').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'), 2500);
+  });
+}
+
+// Animate stats on load
+window.addEventListener('load', ()=>{
+  document.querySelectorAll('.stat-num').forEach(el=>{
+    const target = parseInt(el.textContent);
+    if(isNaN(target)) return;
+    let cur=0; const step=target/30;
+    const t=setInterval(()=>{
+      cur+=step; if(cur>=target){cur=target;clearInterval(t);}
+      el.textContent=Math.floor(cur);
+    },30);
+  });
+});
+</script>
+</body>
+</html>
